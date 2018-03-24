@@ -9,7 +9,7 @@
     <AssemblyName>Everything</AssemblyName>
     <PackageId>Everything</PackageId>
     <PackageTags>search;voidtool;everything</PackageTags>
-    <PackageIconUrl>http://pardahlman.se/pardahlman/everything/icon.png</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/pardahlman/everything/master/icon.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/pardahlman/everything</PackageProjectUrl>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>

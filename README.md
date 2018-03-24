@@ -10,8 +10,9 @@ Intutive, thread safe, search
 
 ```cs
 var client = new EverythingClient();
-var result = await client.SearchAsync("");
+var result = await client.SearchAsync("tickets.pdf");
 var files = result.Items.OfType<FileResultItem>();
+
 foreach (var file in files)
 {
     var fileName = file.Name;
@@ -34,7 +35,7 @@ var options = new SearchOptions
 Out of the box query builder for Everything's search syntax
 
 ```cs
-var everything = await client.SearchAsync(q => q
+var executables = await client.SearchAsync(q => q
     .Executables("everything")
     .OfLargeSize()
     .Modified("2018"));
