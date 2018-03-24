@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Everything
+namespace Everything.Search
 {
-  public class IpcCallerLock
+  internal class IpcCallerLock
   {
     private static readonly SemaphoreSlim IpcSemaphore = new SemaphoreSlim(1,1);
 

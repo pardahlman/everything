@@ -1,51 +1,58 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Everything.LowLevel.SyntacticSugar;
+using Everything.Model;
+using Everything.Result;
+using Everything.Search;
+using Everything.Status;
 
 namespace Everything
 {
-  public class EverythingClient
+  public interface IEverythingClient
   {
-    private readonly IResultEnumerator _resultEnumerator;
-    private readonly IReplyIdGenerator _replyIdGenerator;
+    Task<SearchResult> SearchAsync(string query, SearchOptions options = default, CancellationToken ct = default);
+    EverythingStatus GetStatus();
+    void SetSearchState(SearchOptions options);
+  }
+
+  public class EverythingClient : IDisposable, IEverythingClient
+  {
+    private readonly SearchService _searchService;
+    private readonly ISearchResultService _resultService;
+    private readonly StatusService _statusService;
 
     public EverythingClient()
     {
-      _resultEnumerator = new LazyResultEnumerator();
-      _replyIdGenerator = new ReplyIdGenerator();
+      _searchService = new SearchService();
+      _resultService = new SearchResultService();
+      _statusService = new StatusService();
     }
 
-    public async Task<SearchResult> SearchAsync(string term, SearchOptions options = default, CancellationToken ct = default)
+    public async Task<SearchResult> SearchAsync(string query, SearchOptions options = default, CancellationToken ct = default)
     {
-      if (string.IsNullOrEmpty(term))
+      ct.ThrowIfCancellationRequested();
+
+      if (string.IsNullOrEmpty(query))
       {
-        return default;
+        throw new ArgumentException("Must provide search query", nameof(query));
       }
 
-      var replyId = _replyIdGenerator.Next();
       using (await IpcCallerLock.AquireAsync(ct))
       {
-        IpcWrapper.Search = term;
-
-        if (options?.MatchPath != null) IpcWrapper.MatchPath = options.MatchPath.Value;
-        if (options?.MatchCase != null) IpcWrapper.MatchCase = options.MatchCase.Value;
-        if (options?.MatchWholeWord != null) IpcWrapper.MatchWholeWord = options.MatchWholeWord.Value;
-        if (options?.RegexEnabled != null) IpcWrapper.Regex = options.RegexEnabled.Value;
-        if (options?.MaxResult != null) IpcWrapper.Max = options.MaxResult.Value;
-        if (options?.Offset != null) IpcWrapper.Offset = options.Offset.Value;
-
-        IpcWrapper.ReplyId = replyId;
-        IpcWrapper.Query(wait: true);
-
-        var numberOfResult = IpcWrapper.GetResultCount();
-
-        return new SearchResult
-        {
-          TotalCount = IpcWrapper.GetTotalResultCount(),
-          DirectoryCount = IpcWrapper.GetFolderResultCount(),
-          FileCount = IpcWrapper.GetFileResultCount(),
-          Items = _resultEnumerator.GetResultItems(replyId, 0, numberOfResult, ct)
-        };
+        _searchService.Search(query, options);
+        ct.ThrowIfCancellationRequested();
+        return _resultService.GetCurrentResult(options, ct);
       }
+    }
+
+    public void SetSearchState(SearchOptions options) => _searchService.SetSearchState(options);
+
+    public EverythingStatus GetStatus() => _statusService.GetStatus();
+
+    public void Dispose()
+    {
+      EverythingSdk.Reset();
     }
   }
 }

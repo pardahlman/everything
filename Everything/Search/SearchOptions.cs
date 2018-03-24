@@ -1,4 +1,6 @@
-﻿namespace Everything
+﻿using Everything.LowLevel.SyntacticSugar;
+
+namespace Everything.Search
 {
   public class SearchOptions
   {
@@ -37,20 +39,25 @@
     /// </summary>
     public uint? Offset { get; set; }
 
-    public SortOrder SortOrder { get; set; }
+    /// <summary>
+    /// Specifies the sort for the result.
+    /// </summary>
+    public Sort? Sort { get; set; }
 
-    public SortType SortType { get; set; }
+    /// <summary>
+    /// Specifies what aspects of the request to retrieve
+    /// </summary>
+    public RequestFlags? RequestFlags { get; set; }
 
     public static SearchOptions Default => new SearchOptions
     {
-      MaxResult = 0,
+      RequestFlags = LowLevel.SyntacticSugar.RequestFlags.FileName | LowLevel.SyntacticSugar.RequestFlags.Path,
+      Sort = LowLevel.SyntacticSugar.Sort.NameAscending,
       MatchCase = false,
       MatchPath = false,
       MatchWholeWord = false,
-      Offset = 0,
       RegexEnabled = false,
-      SortType = SortType.Name,
-      SortOrder = SortOrder.Ascending
+      Offset = 0
     };
   }
 }
