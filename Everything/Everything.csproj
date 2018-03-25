@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>A .NET Client for Voidtool's search tool Everything.</Description>
+    <Description>A .NET Client for Voidtool's Everything.</Description>
     <AssemblyTitle>Everything</AssemblyTitle>
     <VersionPrefix>0.0.1</VersionPrefix>
-    <VersionSuffix>alpha1</VersionSuffix>
+    <VersionSuffix>alpha2</VersionSuffix>
     <Authors>pardahlman</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>Everything</AssemblyName>
