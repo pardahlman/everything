@@ -70,7 +70,7 @@ namespace Everything.Result
       return new FileResultItem
       {
         // TODO: Uncomment when SDK does not kill the entire process :(
-        Name = Path.GetFileName(fullPath), //EverythingSdk.GetFileName(resultIndex)
+        Name = Path.GetFileNameWithoutExtension(fullPath), //EverythingSdk.GetFileName(resultIndex)
         Extension = Path.GetExtension(fullPath), //EverythingSdk.GetExtension(resultIndex)
         FullPath = fullPath,
         Created = EverythingSdk.TryGetDateCreated(resultIndex, out var created) ? created : default,
