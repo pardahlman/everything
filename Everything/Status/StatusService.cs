@@ -12,7 +12,8 @@ namespace Everything.Status
         LastError = EverythingSdk.LastError,
         IsRunning = EverythingSdk.Version.Major != 0,
         TargetMachine = EverythingSdk.TargetMachine,
-        IsAdmin = EverythingSdk.IsAdmin
+        IsAdmin = EverythingSdk.IsAdmin,
+        IsDatabaseLoaded = EverythingSdk.IsDbLoaded
       };
     }
   }
